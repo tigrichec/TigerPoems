@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Авторские стихи</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Базовые стили */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0d0d0d;  
+      color: #00ffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+    }
+
+    /* Параллакс-фон */
+    .parallax {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://via.placeholder.com/1920x1080/0d0d0d/00ffff?text=Stars');
+      background-size: cover;
+      background-attachment: fixed;
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    /* Контейнер */
+    .container {
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Неоновый заголовок */
+    .neon-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: #00ffff;   
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+      -webkit-text-stroke: 1px #00ffff;
+      margin-bottom: 30px;
+    }
+
+    /* Блоки стихов */
+    .poem-box {
+      border: 3px solid #0000ff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      background-color: rgba(0, 0, 139, 0.2);
+      box-shadow: 0 0 10px #0000ff, 0 0 20px #0000ff;
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+      white-space: pre-line;
+      overflow: visible;
+    }
+
+    .poem-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ffff;
+    }
+
+    /* Эффект набора текста */
+    .typing-effect p {
+      overflow: hidden;
+      white-space: pre-line;
+      border-right: 2px solid #00ffff;
+      animation: typing 4s steps(20, end), blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #00ffff }
+    }
+
+    /* Кнопка */
+    #nextPoem {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: linear-gradient(to right, #0000ff, #00ffff);
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #nextPoem:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Параллакс-фон -->
+  <div class="parallax"></div>
+
+  <!-- Контейнер с контентом -->
+  <div class="container">
+    <h1 class="neon-text">Мои авторские стихи</h1>
+
+    <!-- Три отдельных блока для стихов -->
+    <div class="poem-box typing-effect" id="poem1">
+      <p>
+        Любовь уж с детства нам<br>
+        Понятно это слово,<br>
+        но каждый ощущает по иному.<br>
+        Его значение не простое.<br>
+        Любовь лишь для кого-то мимолётна,<br>
+        а для кого-то постоянна.<br>
+        Уж и яркое свеченье душ людей<br>
+        наполнят в сердцах тени добрых душ.<br>
+        И страх уйдёт уже тогда.<br>
+        Совет я от себя вам, дам друзья.<br>
+        Любовь — это не сладость, ласканье,<br>
+        но и сочувствье и состраданье.
+      </p>
+    </div>
+
+    <div class="poem-box typing-effect" id="poem2" style="display: none;">
+      <p>
+        Дарите побольше улыбок,<br>
+        ведь улыбка — это звезда,<br>
+        без которой в жизни нельзя.<br>
+        Дарите побольше улыбок,<br>
+        улыбка как солнышко,<br>
+        луч озаряет,<br>
+        она небеса согревает,<br>
+        другие сердца
+      </p>
+    </div>
+
+    <div class="poem-box typing-effect" id="poem3" style="display: none;">
+      <p>
+        Любовь — как огонёк в сердцах.<br>
+        Порою он селен,<br>
+        порою безмятежен,<br>
+        но очень часто нежен, нежен.<br>
+        Но люди быстро забывают,<br>
+        что огонёчек чудный<br>
+        убивают своим упрямством,<br>
+        не терпением.<br>
+        Хочу лишь молвить я стихотворением,<br>
+        Чтоб огонёчек чудесный уберечь,<br>
+        Не надо быстро словом сечь!
+      </p>
+    </div>
+
+    <!-- Кнопка -->
+    <button id="nextPoem" aria-label="Показать следующее стихотворение">Следующее стихотворение</button>
+  </div>
+
+  <!-- Холст для анимации звёзд -->
+  <canvas id="stars"></canvas>
+
+  <script>
+    // Анимированный фон (звёзды)
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let stars = [];
+    for (let i = 0; i < 100; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5
+      });
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ffff';
+      for (let star of stars) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+        star.x += star.dx;
+        star.y += star.dy;
+        if (star.x < 0 || star.x > canvas.width) star.dx *= -1;
+        if (star.y < 0 || star.y > canvas.height) star.dy *= -1;
+      }
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+
+    // Смена стихов
+    const poems = [
+      document.getElementById('poem1'),
+      document.getElementById('poem2'),
+      document.getElementById('poem3')
+    ];
+
+    let currentIndex = 0;
+
+    document.getElementById('nextPoem').addEventListener('click', () => {
+      // Скрыть текущий стих
+      poems[currentIndex].style.display = 'none';
+
+      // Обновить индекс
+      currentIndex = (currentIndex + 1) % poems.length;
+
+      // Показать следующий стих
+      poems[currentIndex].style.display = 'block';
+
+      // Перезапустить анимацию набора текста
+      const poemBox = poems[currentIndex];
+      poemBox.classList.remove('typing-effect');
+      void poemBox.offsetWidth; // Принудительное обновление
+      poemBox.classList.add('typing-effect');
+    });
+  </script>
+</body>
+</html>
