@@ -1,4 +1,143 @@
-<script>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поэтическая страничка</title>
+  <!-- Подключаем библиотеки -->
+  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  
+  <style>
+    :root {
+      --bg-color: #f5f5f5;
+      --text-color: #333;
+      --container-bg: white;
+      --primary-color: #2563eb;
+      --comment-bg: #f0f8ff;
+    }
+    [data-theme="dark"] {
+      --bg-color: #1e293b;
+      --text-color: #f8fafc;
+      --container-bg: #334155;
+      --primary-color: #60a5fa;
+      --comment-bg: #2d3748;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: var(--container-bg);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 { color: var(--primary-color); }
+    .poem { margin: 30px 0; line-height: 1.6; font-size: 18px; }
+    .author { font-style: italic; opacity: 0.7; }
+    .theme-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    
+    /* Стили для комментариев */
+    .comments-section {
+      margin-top: 40px;
+      text-align: left;
+    }
+    .comment-form {
+      margin-bottom: 20px;
+    }
+    .comment-form input, 
+    .comment-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background: var(--container-bg);
+      color: var(--text-color);
+    }
+    .comment-form button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .comment {
+      background: var(--comment-bg);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .comment-author {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .comment-date {
+      font-size: 0.8em;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body class="light">
+  <div class="container animate__animated animate__fadeIn">
+    <button class="theme-btn" data-toggle-theme="dark,light" data-act-class="animate__rubberBand">
+      🌓 Сменить тему
+    </button>
+    <h1>✨ Поэтическая страничка ✨</h1>
+    
+    <div class="poem">
+      <p>Ветер веет над полями,</p>
+      <p>Шепчет травы и кусты.</p>
+      <p>Солнце светит за горами —</p>
+      <p>Это лето, это ты.</p>
+      <p class="author">— Аноним</p>
+    </div>
+    
+    <div class="poem animate__animated animate__fadeInUp animate__delay-1s">
+      <p>Ночь тиха, небо ясно,</p>
+      <p>Звёзды светят в вышине.</p>
+      <p>Сердце бьётся так прекрасно —</p>
+      <p>Это счастье, это мне.</p>
+      <p class="author">— Аноним</p>
+    </div>
+    
+    <!-- Секция комментариев -->
+    <div class="comments-section">
+      <h2>Комментарии</h2>
+      
+      <div class="comment-form">
+        <input type="text" id="comment-name" placeholder="Ваше имя" required>
+        <textarea id="comment-text" placeholder="Ваш комментарий" rows="3" required></textarea>
+        <button onclick="addComment()">Отправить</button>
+      </div>
+      
+      <div id="comments-list"></div>
+    </div>
+  </div>
+
+  <script>
     // Конфигурация Firebase (замените на свою!)
     const firebaseConfig = {
     apiKey: "AIzaSyAWv0Ft7KGectRYqSCpMsCzymEGaK7wTp4",
