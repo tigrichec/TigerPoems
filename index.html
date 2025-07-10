@@ -1,296 +1,55 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторские стихи Авакяна Тиграна</title>
-    <style>
-        :root {
-            --primary: #6C5CE7;
-            --secondary: #FF7675;
-            --accent: #00b894;
-            --bg: #f8f9fa;
-            --text: #2d3436;
-            --shadow: rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, var(--bg), #eaeaea);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        header {
-            background: linear-gradient(120deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        header h1 {
-            font-size: 3rem;
-            font-style: italic;
-            animation: fadeIn 2s ease-in;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .poems-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            animation: slideUp 1s ease-out;
-        }
-
-        .poem-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .poem-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .poem-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            transform: rotate(25deg);
-            z-index: 0;
-            opacity: 0.05;
-            transition: opacity 0.3s ease;
-        }
-
-        .poem-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .poem-title {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        .poem-author {
-            font-style: italic;
-            color: #666;
-            margin-bottom: 1rem;
-        }
-
-        .poem-excerpt {
-            opacity: 0.8;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            max-width: 800px;
-            width: 90%;
-            border-radius: 20px;
-            padding: 2rem;
-            position: relative;
-            animation: zoomIn 0.3s ease-out;
-            overflow-y: auto;
-            max-height: 90vh;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--primary);
-            transition: color 0.3s ease;
-        }
-
-        .close-btn:hover {
-            color: var(--accent);
-        }
-
-        .full-poem {
-            white-space: pre-line;
-            margin-top: 1rem;
-        }
-
-        footer {
-            background: #2d3436;
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 4rem;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 2rem;
-            }
-            
-            .poem-card {
-                padding: 1rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Авторские стихи Авакяна Тиграна</h1>
-        <p>Сборник авторских стихов</p>
-    </header>
-
-    <div class="container">
-        <div class="poems-grid" id="poemsGrid">
-            <!-- Стихи будут добавлены через JS -->
-        </div>
-    </div>
-
-    <div class="modal" id="poemModal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeBtn">&times;</span>
-            <h2 id="modalTitle" class="poem-title"></h2>
-            <p id="modalAuthor" class="poem-author"></p>
-            <div class="full-poem" id="modalText"></div>
-        </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2025 Авторские стихи Авакяна Тиграна. Все права защищены.</p>
-    </footer>
-
-    <script>
-        const poems = [
-            {
-                id: 1,
-                title: "Разные лица любви",
-                author: "Авакян Тигран",
-                date: "2024-03-15",
-                excerpt: "Любовь уж с детства нам понятно это слово... Его значение не простое.",
-                fullText: "Любовь уж с детства нам\nПонятно это слово,\nно каждый ощущает по иному.\nЕго значение не простое.\nЛюбовь лишь для кого-то мимолётна,\nа для кого то постоянна.\nУж и яркое свеченье душ\nлюдей наполнят в сердцах тени добрых душ.\nИ страх уйдет уже тогда.\nСовет я от себя вам, дам друзья.\nЛюбовь – это не сладость, лобзанье,\nно и сочувствье и состраданье."
-            },
-            {
-                id: 2,
-                title: "Улыбка-звезда",
-                author: "Авакян Тигран",
-                date: "2024-04-02",
-                excerpt: "Дарите побольше улыбок... Ведь улыбка – это звезда.",
-                fullText: "Дарите побольше улыбок,\nведь улыбка – это звезда,\nбез которой в жизни нельзя.\nДарите побольше улыбок,\nулыбка как солнышко,\nлуч озаряет,\nона небеса согревает,\nдругие сердца"
-            },
-            {
-                id: 3,
-                title: "Огонёк в сердце",
-                author: "Авакян Тигран",
-                date: "2024-05-10",
-                excerpt: "Любовь – как огонек в сердцах... Порою он силен, порою безмятежен.",
-                fullText: "Любовь – как огонек в сердцах.\nПорою он силен,\nпорою безмятежен,\nно очень часто нежен, нежен.\nНо люди быстро забывают,\nчто огонёчек чудный\nУбивают своим упрямством,\nне терпением.\nХочу лишь молвить я стихотворением,\nЧтоб огонёчек чудесный уберечь,\nНе надо быстро словом сечь"
-            }
-        ];
-
-        const poemsGrid = document.getElementById('poemsGrid');
-        const modal = document.getElementById('poemModal');
-        const closeBtn = document.getElementById('closeBtn');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalAuthor = document.getElementById('modalAuthor');
-        const modalText = document.getElementById('modalText');
-
-        function createPoemCard(poem) {
-            const card = document.createElement('div');
-            card.className = 'poem-card';
-            card.innerHTML = `
-                <div class="poem-content">
-                    <h3 class="poem-title">${poem.title}</h3>
-                    <p class="poem-author">— ${poem.author}</p>
-                    <p class="poem-excerpt">${poem.excerpt}</p>
-                </div>
-            `;
-            card.addEventListener('click', () => openModal(poem));
-            return card;
-        }
-
-        function openModal(poem) {
-            modalTitle.textContent = poem.title;
-            modalAuthor.textContent = `— ${poem.author}`;
-            modalText.textContent = poem.fullText;
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-        }
-
-        closeBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
+<script>
+    // Конфигурация Firebase (замените на свою!)
+    const firebaseConfig = {
+    apiKey: "AIzaSyAWv0Ft7KGectRYqSCpMsCzymEGaK7wTp4",
+    authDomain: "poetic-comments.firebaseapp.com",
+    projectId: "poetic-comments",
+    storageBucket: "poetic-comments.firebasestorage.app",
+    messagingSenderId: "1008986732781",
+    appId: "1:1008986732781:web:b4102ed37eca33e36e74e4"
+  };
+    
+    // Инициализация Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
+    // Функция добавления комментария
+    function addComment() {
+      const name = document.getElementById('comment-name').value;
+      const text = document.getElementById('comment-text').value;
+      
+      if (name && text) {
+        db.collection("comments").add({
+          name: name,
+          text: text,
+          date: new Date()
+        }).then(() => {
+          document.getElementById('comment-name').value = '';
+          document.getElementById('comment-text').value = '';
         });
-
-        // Добавляем стихи на страницу
-        poems.forEach(poem => {
-            const card = createPoemCard(poem);
-            poemsGrid.appendChild(card);
+      }
+    }
+    
+    // Отображение комментариев
+    db.collection("comments")
+      .orderBy("date", "desc")
+      .onSnapshot((snapshot) => {
+        const commentsList = document.getElementById('comments-list');
+        commentsList.innerHTML = '';
+        
+        snapshot.forEach(doc => {
+          const comment = doc.data();
+          const commentDate = comment.date.toDate().toLocaleString();
+          
+          commentsList.innerHTML += `
+            <div class="comment animate__animated animate__fadeIn">
+              <div class="comment-author">${comment.name}</div>
+              <p>${comment.text}</p>
+              <div class="comment-date">${commentDate}</div>
+            </div>
+          `;
         });
-    </script>
+      });
+  </script>
 </body>
 </html>
