@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Поэтическая страничка</title>
+  <title>Поэтическая страничка в океан Тиграна</title>
   <!-- Подключаем библиотеки -->
   <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -18,6 +18,9 @@
       --container-bg: white;
       --primary-color: #2563eb;
       --comment-bg: #f0f8ff;
+      --poem-card-1: #e3f2fd;
+      --poem-card-2: #e8f5e9;
+      --poem-card-3: #fce4ec;
     }
     [data-theme="dark"] {
       --bg-color: #1e293b;
@@ -25,9 +28,12 @@
       --container-bg: #334155;
       --primary-color: #60a5fa;
       --comment-bg: #2d3748;
+      --poem-card-1: #0d47a1;
+      --poem-card-2: #1b5e20;
+      --poem-card-3: #880e4f;
     }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
       text-align: center;
@@ -36,67 +42,130 @@
       transition: all 0.3s;
     }
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 20px;
       background: var(--container-bg);
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
-    h1 { color: var(--primary-color); }
-    .poem { margin: 30px 0; line-height: 1.6; font-size: 18px; }
-    .author { font-style: italic; opacity: 0.7; }
+    h1 { 
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      font-size: 2.2em;
+    }
+    .poems-container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      margin: 40px 0;
+    }
+    .poem-card {
+      padding: 25px;
+      border-radius: 12px;
+      text-align: left;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .poem-card:hover {
+      transform: translateY(-5px);
+    }
+    .poem-card:nth-child(1) {
+      background: var(--poem-card-1);
+      border-left: 5px solid #1565c0;
+    }
+    .poem-card:nth-child(2) {
+      background: var(--poem-card-2);
+      border-left: 5px solid #2e7d32;
+    }
+    .poem-card:nth-child(3) {
+      background: var(--poem-card-3);
+      border-left: 5px solid #ad1457;
+    }
+    .poem-title {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    .poem-text {
+      line-height: 1.8;
+      font-size: 1.1em;
+    }
+    .poem-text p {
+      margin: 10px 0;
+    }
+    .author {
+      font-style: italic;
+      text-align: right;
+      margin-top: 15px;
+      opacity: 0.8;
+    }
     .theme-btn {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 12px 24px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      font-size: 1em;
+      transition: all 0.3s;
+    }
+    .theme-btn:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
     }
     
     /* Стили для комментариев */
     .comments-section {
-      margin-top: 40px;
+      margin-top: 50px;
       text-align: left;
     }
     .comment-form {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .comment-form input, 
     .comment-form textarea {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
       border: 1px solid #ddd;
       background: var(--container-bg);
       color: var(--text-color);
+      font-size: 1em;
     }
     .comment-form button {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 12px 25px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1em;
+      transition: all 0.3s;
+    }
+    .comment-form button:hover {
+      opacity: 0.9;
     }
     .comment {
       background: var(--comment-bg);
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .comment-author {
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      font-size: 1.1em;
     }
     .comment-date {
-      font-size: 0.8em;
+      font-size: 0.85em;
       color: var(--text-color);
       opacity: 0.7;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -105,22 +174,51 @@
     <button class="theme-btn" data-toggle-theme="dark,light" data-act-class="animate__rubberBand">
       🌓 Сменить тему
     </button>
-    <h1>✨ Поэтическая страничка ✨</h1>
+    <h1>✨ Поэтическая страничка в океан Тиграна ✨</h1>
     
-    <div class="poem">
-      <p>Ветер веет над полями,</p>
-      <p>Шепчет травы и кусты.</p>
-      <p>Солнце светит за горами —</p>
-      <p>Это лето, это ты.</p>
-      <p class="author">— Аноним</p>
-    </div>
-    
-    <div class="poem animate__animated animate__fadeInUp animate__delay-1s">
-      <p>Ночь тиха, небо ясно,</p>
-      <p>Звёзды светят в вышине.</p>
-      <p>Сердце бьётся так прекрасно —</p>
-      <p>Это счастье, это мне.</p>
-      <p class="author">— Аноним</p>
+    <div class="poems-container">
+      <!-- Первый стих -->
+      <div class="poem-card animate__animated animate__fadeIn">
+        <div class="poem-title">Понятное слово</div>
+        <div class="poem-text">
+          <p>Любовь уж с детства нам Понятно это слово,</p>
+          <p>но каждый ощущает по-иному. Его значение не простое.</p>
+          <p>Любовь лишь для кого-то мимолётна, а для кого-то постоянна.</p>
+          <p>Уж и яркое свеченье душ людей наполнят в сердцах тени добрых душ.</p>
+          <p>И страх уйдет уже тогда.</p>
+          <p>Совет я от себя вам, дам друзья.</p>
+          <p>Любовь – это не сладость, лобзанье, но и сочувствье и состраданье.</p>
+        </div>
+        <div class="author">— Тигран</div>
+      </div>
+      
+      <!-- Второй стих -->
+      <div class="poem-card animate__animated animate__fadeIn animate__delay-1s">
+        <div class="poem-title">Дарите побольше улыбок</div>
+        <div class="poem-text">
+          <p>Дарите побольше улыбок, ведь улыбка – это звезда,</p>
+          <p>без которой в жизни нельзя.</p>
+          <p>Дарите побольше улыбок, улыбка как солнышко,</p>
+          <p>луч озаряет, она небеса согревает, другие сердца.</p>
+        </div>
+        <div class="author">— Тигран</div>
+      </div>
+      
+      <!-- Третий стих -->
+      <div class="poem-card animate__animated animate__fadeIn animate__delay-2s">
+        <div class="poem-title">Огонёк в сердцах</div>
+        <div class="poem-text">
+          <p>Любовь – как огонек в сердцах.</p>
+          <p>Порою он селен, порою безмятежен,</p>
+          <p>но очень часто нежен, нежен.</p>
+          <p>Но люди быстро забывают,</p>
+          <p>что огонёчек чудный убивают своим упрямством, нетерпением.</p>
+          <p>Хочу лишь молвить я стихотворением,</p>
+          <p>чтоб огонёчек чудесный уберечь,</p>
+          <p>не надо быстро словом сечь!</p>
+        </div>
+        <div class="author">— Тигран</div>
+      </div>
     </div>
     
     <!-- Секция комментариев -->
@@ -129,7 +227,7 @@
       
       <div class="comment-form">
         <input type="text" id="comment-name" placeholder="Ваше имя" required>
-        <textarea id="comment-text" placeholder="Ваш комментарий" rows="3" required></textarea>
+        <textarea id="comment-text" placeholder="Ваш комментарий" rows="4" required></textarea>
         <button onclick="addComment()">Отправить</button>
       </div>
       
@@ -147,7 +245,6 @@
     messagingSenderId: "1008986732781",
     appId: "1:1008986732781:web:b4102ed37eca33e36e74e4"
   };
-    
     // Инициализация Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
