@@ -1,4 +1,5 @@
- <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -13,46 +14,58 @@
   
   <style>
     :root {
-      --bg-color: #f5f5f5;
-      --text-color: #333;
-      --container-bg: white;
-      --primary-color: #2563eb;
-      --comment-bg: #f0f8ff;
+      --bg-color: #ffffff;
+      --text-color: #333333;
+      --container-bg: #ffffff;
+      --primary-color: #0070c9;
+      --comment-bg: #f8f8f8;
       --poem-card-1: #e3f2fd;
       --poem-card-2: #e8f5e9;
       --poem-card-3: #fce4ec;
+      --border-color: #dcdcdc;
+      --button-bg: #0070c9;
+      --button-hover: #0056b3;
+      --input-border: #c0c0c0;
+      --shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     [data-theme="dark"] {
-      --bg-color: #1e293b;
-      --text-color: #f8fafc;
-      --container-bg: #334155;
-      --primary-color: #60a5fa;
-      --comment-bg: #2d3748;
-      --poem-card-1: #0d47a1;
-      --poem-card-2: #1b5e20;
-      --poem-card-3: #880e4f;
+      --bg-color: #000000;
+      --text-color: #ffffff;
+      --container-bg: #1a1a1a;
+      --primary-color: #0a84ff;
+      --comment-bg: #2d2d2d;
+      --border-color: #404040;
+      --button-bg: #0a84ff;
+      --button-hover: #0066cc;
+      --input-border: #505050;
+      --shadow: 0 2px 10px rgba(255,255,255,0.1);
     }
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
       text-align: center;
       margin: 0;
       padding: 20px;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      font-size: 16px;
+      line-height: 1.4;
     }
     .container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 30px;
       background: var(--container-bg);
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
     }
     h1 { 
       color: var(--primary-color);
       margin-bottom: 30px;
       font-size: 2.2em;
+      font-weight: 500;
+      letter-spacing: -0.5px;
     }
     .poems-container {
       display: flex;
@@ -64,45 +77,48 @@
       padding: 25px;
       border-radius: 12px;
       text-align: left;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
+      box-shadow: var(--shadow);
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      border: 1px solid var(--border-color);
+      background: var(--container-bg);
     }
     .poem-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
     .poem-card:nth-child(1) {
-      background: var(--poem-card-1);
-      border-left: 5px solid #1565c0;
+      border-left: 4px solid #0070c9;
     }
     .poem-card:nth-child(2) {
-      background: var(--poem-card-2);
-      border-left: 5px solid #2e7d32;
+      border-left: 4px solid #34c759;
     }
     .poem-card:nth-child(3) {
-      background: var(--poem-card-3);
-      border-left: 5px solid #ad1457;
+      border-left: 4px solid #ff3b30;
     }
     .poem-title {
       font-size: 1.5em;
       margin-bottom: 15px;
       color: var(--primary-color);
-      font-weight: bold;
+      font-weight: 500;
+      letter-spacing: -0.3px;
     }
     .poem-text {
-      line-height: 1.8;
+      line-height: 1.6;
       font-size: 1.1em;
+      font-weight: 300;
     }
     .poem-text p {
-      margin: 10px 0;
+      margin: 12px 0;
     }
     .author {
       font-style: italic;
       text-align: right;
       margin-top: 15px;
       opacity: 0.8;
+      font-weight: 300;
     }
     .theme-btn {
-      background: var(--primary-color);
+      background: var(--button-bg);
       color: white;
       border: none;
       padding: 12px 24px;
@@ -110,11 +126,15 @@
       cursor: pointer;
       margin-bottom: 30px;
       font-size: 1em;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .theme-btn:hover {
-      opacity: 0.9;
+      background: var(--button-hover);
       transform: scale(1.02);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     
     /* Стили для комментариев */
@@ -128,44 +148,86 @@
     .comment-form input, 
     .comment-form textarea {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 15px;
       border-radius: 8px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--input-border);
       background: var(--container-bg);
       color: var(--text-color);
       font-size: 1em;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      box-sizing: border-box;
+    }
+    .comment-form input:focus, 
+    .comment-form textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(0, 112, 201, 0.2);
     }
     .comment-form button {
-      background: var(--primary-color);
+      background: var(--button-bg);
       color: white;
       border: none;
-      padding: 12px 25px;
+      padding: 14px 25px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1em;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .comment-form button:hover {
-      opacity: 0.9;
+      background: var(--button-hover);
+      transform: scale(1.02);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .comment {
       background: var(--comment-bg);
       padding: 20px;
       border-radius: 10px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .comment:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
     .comment-author {
-      font-weight: bold;
+      font-weight: 500;
       margin-bottom: 8px;
       font-size: 1.1em;
+      color: var(--primary-color);
     }
     .comment-date {
       font-size: 0.85em;
       color: var(--text-color);
       opacity: 0.7;
       margin-top: 10px;
+      font-weight: 300;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 10px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+      .poem-card {
+        padding: 20px;
+      }
+      .poem-title {
+        font-size: 1.3em;
+      }
+      .poem-text {
+        font-size: 1em;
+      }
     }
   </style>
 </head>
