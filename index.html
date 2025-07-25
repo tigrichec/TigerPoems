@@ -1,14 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Поэтическая страничка в океан Тиграна</title>
-  <!-- Подключаем библиотеки -->
   <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   
@@ -81,6 +78,7 @@
       transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
       border: 1px solid var(--border-color);
       background: var(--container-bg);
+      position: relative;
     }
     .poem-card:hover {
       transform: translateY(-2px);
@@ -136,8 +134,6 @@
       transform: scale(1.02);
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-    
-    /* Стили для комментариев */
     .comments-section {
       margin-top: 50px;
       text-align: left;
@@ -209,8 +205,40 @@
       margin-top: 10px;
       font-weight: 300;
     }
-    
-    /* Адаптивность */
+    .reactions {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    .reaction-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+      transition: all 0.3s ease;
+      padding: 5px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reaction-btn:hover {
+      transform: scale(1.2);
+    }
+    .reaction-btn.liked {
+      color: #ff3b30;
+      animation: pulse 0.5s;
+    }
+    .reaction-count {
+      font-size: 0.9em;
+      margin-left: 5px;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
     @media (max-width: 768px) {
       .container {
         padding: 20px;
@@ -240,7 +268,7 @@
     
     <div class="poems-container">
       <!-- Первый стих -->
-      <div class="poem-card animate__animated animate__fadeIn">
+      <div class="poem-card animate__animated animate__fadeIn" id="poem-1">
         <div class="poem-title">Понятное слово</div>
         <div class="poem-text">
           <p>Любовь уж с детства нам Понятно это слово,</p>
@@ -252,10 +280,14 @@
           <p>Любовь – это не сладость, лобзанье, но и сочувствье и состраданье.</p>
         </div>
         <div class="author">— Тигран</div>
+        <div class="reactions">
+          <button class="reaction-btn" onclick="toggleReaction('poem-1')">❤️</button>
+          <span class="reaction-count" id="poem-1-count">0</span>
+        </div>
       </div>
       
       <!-- Второй стих -->
-      <div class="poem-card animate__animated animate__fadeIn animate__delay-1s">
+      <div class="poem-card animate__animated animate__fadeIn animate__delay-1s" id="poem-2">
         <div class="poem-title">Дарите побольше улыбок</div>
         <div class="poem-text">
           <p>Дарите побольше улыбок, ведь улыбка – это звезда,</p>
@@ -264,10 +296,14 @@
           <p>луч озаряет, она небеса согревает, другие сердца.</p>
         </div>
         <div class="author">— Тигран</div>
+        <div class="reactions">
+          <button class="reaction-btn" onclick="toggleReaction('poem-2')">❤️</button>
+          <span class="reaction-count" id="poem-2-count">0</span>
+        </div>
       </div>
       
       <!-- Третий стих -->
-      <div class="poem-card animate__animated animate__fadeIn animate__delay-2s">
+      <div class="poem-card animate__animated animate__fadeIn animate__delay-2s" id="poem-3">
         <div class="poem-title">Огонёк в сердцах</div>
         <div class="poem-text">
           <p>Любовь – как огонек в сердцах.</p>
@@ -280,6 +316,10 @@
           <p>не надо быстро словом сечь!</p>
         </div>
         <div class="author">— Тигран</div>
+        <div class="reactions">
+          <button class="reaction-btn" onclick="toggleReaction('poem-3')">❤️</button>
+          <span class="reaction-count" id="poem-3-count">0</span>
+        </div>
       </div>
     </div>
     
@@ -298,56 +338,231 @@
   </div>
 
   <script>
-    // Конфигурация Firebase (замените на свою!)
+    // ЗАМЕНИТЕ ЭТУ КОНФИГУРАЦИЮ, КОГДА ПЕРЕСТАНЕТ РАБОТАТЬ
     const firebaseConfig = {
-    apiKey: "AIzaSyAWv0Ft7KGectRYqSCpMsCzymEGaK7wTp4",
-    authDomain: "poetic-comments.firebaseapp.com",
-    projectId: "poetic-comments",
-    storageBucket: "poetic-comments.firebasestorage.app",
-    messagingSenderId: "1008986732781",
-    appId: "1:1008986732781:web:b4102ed37eca33e36e74e4"
-  };
-    // Инициализация Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+      apiKey: "AIzaSyAWv0Ft7KGectRYqSCpMsCzymEGaK7wTp4",
+      authDomain: "poetic-comments.firebaseapp.com",
+      projectId: "poetic-comments",
+      storageBucket: "poetic-comments.appspot.com",
+      messagingSenderId: "1008986732781",
+      appId: "1:1008986732781:web:b4102ed37eca33e36e74e4"
+    };
     
-    // Функция добавления комментария
-    function addComment() {
-      const name = document.getElementById('comment-name').value;
-      const text = document.getElementById('comment-text').value;
+    // Инициализация Firebase
+    let db;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+    } catch (error) {
+      console.error("Firebase не доступен, работаем с LocalStorage");
+    }
+    
+    // Ключ для LocalStorage
+    const LOCAL_STORAGE_KEY = 'poetry_site_data';
+    
+    // Получение текущего пользователя
+    function getUserId() {
+      let userId = localStorage.getItem('user_id');
+      if (!userId) {
+        userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('user_id', userId);
+      }
+      return userId;
+    }
+    
+    // Сохранение данных в LocalStorage
+    function saveToLocalStorage(data) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+    }
+    
+    // Загрузка данных из LocalStorage
+    function loadFromLocalStorage() {
+      const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+      return data ? JSON.parse(data) : { comments: [], reactions: {} };
+    }
+    
+    // Добавление комментария
+    async function addComment() {
+      const name = document.getElementById('comment-name').value.trim();
+      const text = document.getElementById('comment-text').value.trim();
       
-      if (name && text) {
-        db.collection("comments").add({
-          name: name,
-          text: text,
-          date: new Date()
-        }).then(() => {
-          document.getElementById('comment-name').value = '';
-          document.getElementById('comment-text').value = '';
-        });
+      if (!name || !text) {
+        alert('Пожалуйста, заполните все поля');
+        return;
+      }
+      
+      const comment = {
+        name: name,
+        text: text,
+        date: new Date()
+      };
+      
+      // Всегда сохраняем в LocalStorage
+      const backupData = loadFromLocalStorage();
+      backupData.comments.push(comment);
+      saveToLocalStorage(backupData);
+      
+      // Пробуем сохранить в Firebase
+      if (db) {
+        try {
+          await db.collection("comments").add(comment);
+        } catch (error) {
+          console.error("Ошибка при добавлении в Firebase:", error);
+        }
+      }
+      
+      // Очищаем поля
+      document.getElementById('comment-name').value = '';
+      document.getElementById('comment-text').value = '';
+      
+      // Обновляем список
+      loadComments();
+    }
+    
+    // Загрузка комментариев
+    function loadComments() {
+      // Сначала пробуем загрузить из Firebase
+      if (db) {
+        db.collection("comments")
+          .orderBy("date", "desc")
+          .get()
+          .then(snapshot => {
+            const comments = [];
+            snapshot.forEach(doc => {
+              comments.push(doc.data());
+            });
+            
+            // Сохраняем в LocalStorage как резерв
+            const backupData = loadFromLocalStorage();
+            backupData.comments = comments;
+            saveToLocalStorage(backupData);
+            
+            displayComments(comments);
+          })
+          .catch(error => {
+            console.error("Ошибка загрузки из Firebase:", error);
+            // Если ошибка - загружаем из LocalStorage
+            const backupData = loadFromLocalStorage();
+            displayComments(backupData.comments);
+          });
+      } else {
+        // Firebase не доступен - только LocalStorage
+        const backupData = loadFromLocalStorage();
+        displayComments(backupData.comments);
       }
     }
     
     // Отображение комментариев
-    db.collection("comments")
-      .orderBy("date", "desc")
-      .onSnapshot((snapshot) => {
-        const commentsList = document.getElementById('comments-list');
-        commentsList.innerHTML = '';
-        
-        snapshot.forEach(doc => {
-          const comment = doc.data();
-          const commentDate = comment.date.toDate().toLocaleString();
-          
-          commentsList.innerHTML += `
-            <div class="comment animate__animated animate__fadeIn">
-              <div class="comment-author">${comment.name}</div>
-              <p>${comment.text}</p>
-              <div class="comment-date">${commentDate}</div>
-            </div>
-          `;
-        });
+    function displayComments(comments) {
+      const commentsList = document.getElementById('comments-list');
+      commentsList.innerHTML = '';
+      
+      comments.forEach(comment => {
+        const commentDate = new Date(comment.date).toLocaleString();
+        commentsList.innerHTML += `
+          <div class="comment animate__animated animate__fadeIn">
+            <div class="comment-author">${comment.name}</div>
+            <p>${comment.text}</p>
+            <div class="comment-date">${commentDate}</div>
+          </div>
+        `;
       });
+    }
+    
+    // Переключение реакции
+    async function toggleReaction(poemId) {
+      const userId = getUserId();
+      const reactionBtn = document.querySelector(`#${poemId} .reaction-btn`);
+      
+      // Работаем с LocalStorage
+      const backupData = loadFromLocalStorage();
+      if (!backupData.reactions[poemId]) {
+        backupData.reactions[poemId] = [];
+      }
+      
+      const index = backupData.reactions[poemId].indexOf(userId);
+      if (index === -1) {
+        // Добавляем реакцию
+        backupData.reactions[poemId].push(userId);
+        reactionBtn.classList.add('liked');
+      } else {
+        // Удаляем реакцию
+        backupData.reactions[poemId].splice(index, 1);
+        reactionBtn.classList.remove('liked');
+      }
+      
+      saveToLocalStorage(backupData);
+      updateReactionCount(poemId);
+      
+      // Пробуем синхронизировать с Firebase
+      if (db) {
+        try {
+          if (reactionBtn.classList.contains('liked')) {
+            await db.collection("reactions").add({
+              poemId: poemId,
+              userId: userId,
+              timestamp: new Date()
+            });
+          } else {
+            const snapshot = await db.collection("reactions")
+              .where("poemId", "==", poemId)
+              .where("userId", "==", userId)
+              .get();
+            
+            snapshot.forEach(doc => {
+              db.collection("reactions").doc(doc.id).delete();
+            });
+          }
+        } catch (error) {
+          console.error("Ошибка синхронизации реакции:", error);
+        }
+      }
+    }
+    
+    // Обновление счетчика реакций
+    function updateReactionCount(poemId) {
+      const backupData = loadFromLocalStorage();
+      const count = backupData.reactions[poemId]?.length || 0;
+      document.getElementById(`${poemId}-count`).textContent = count;
+    }
+    
+    // Проверка реакций пользователя
+    function checkUserReactions() {
+      const userId = getUserId();
+      const backupData = loadFromLocalStorage();
+      
+      ['poem-1', 'poem-2', 'poem-3'].forEach(poemId => {
+        const userReacted = backupData.reactions[poemId]?.includes(userId) || false;
+        const btn = document.querySelector(`#${poemId} .reaction-btn`);
+        if (btn) btn.classList.toggle('liked', userReacted);
+      });
+    }
+    
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', () => {
+      loadComments();
+      checkUserReactions();
+      
+      // Инициализация счетчиков реакций
+      ['poem-1', 'poem-2', 'poem-3'].forEach(poemId => {
+        updateReactionCount(poemId);
+      });
+      
+      // Реал-тайм обновления для Firebase
+      if (db) {
+        db.collection("comments")
+          .orderBy("date", "desc")
+          .onSnapshot(snapshot => {
+            const comments = [];
+            snapshot.forEach(doc => {
+              comments.push(doc.data());
+            });
+            displayComments(comments);
+          }, error => {
+            console.error("Ошибка слушателя комментариев:", error);
+          });
+      }
+    });
   </script>
 </body>
 </html>
